@@ -1,0 +1,303 @@
+/* 自定義滾動條 */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: #F1F5F9;
+    border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #CBD5E1;
+    border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #94A3B8;
+}
+
+/* 打字動畫 */
+.typing-dots {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.typing-dots span {
+    width: 6px;
+    height: 6px;
+    background: #64748B;
+    border-radius: 50%;
+    animation: typing 1.4s infinite ease-in-out;
+}
+
+.typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+.typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes typing {
+    0%, 100% { transform: scale(0.8); opacity: 0.5; }
+    50% { transform: scale(1.2); opacity: 1; }
+}
+
+/* 聊天動畫 */
+.message-user {
+    animation: slideInRight 0.3s ease-out;
+}
+
+.message-ai {
+    animation: slideInLeft 0.3s ease-out;
+}
+
+@keyframes slideInRight {
+    from { transform: translateX(20px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideInLeft {
+    from { transform: translateX(-20px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+/* AI 助手組件 */
+.ai-assistant {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    z-index: 100;
+}
+
+.chat-window {
+    position: absolute;
+    bottom: 5rem;
+    right: 0;
+    width: 380px;
+    height: 550px;
+    background: white;
+    border-radius: 1.5rem;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    display: none;
+    flex-direction: column;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+    z-index: 101;
+}
+
+.chat-window.active {
+    display: flex;
+    animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.chat-header {
+    padding: 1rem 1.25rem;
+    background: linear-gradient(to right, var(--cip-blue), var(--cip-blue-light));
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.chat-title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.chat-avatar {
+    width: 2rem;
+    height: 2rem;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.875rem;
+}
+
+.chat-title-text {
+    font-weight: 600;
+    font-size: 0.875rem;
+}
+
+.chat-subtitle {
+    font-size: 0.625rem;
+    color: rgba(255, 255, 255, 0.8);
+    display: block;
+}
+
+.chat-close {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 0.75rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.chat-close:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.chat-messages {
+    flex: 1;
+    padding: 1.25rem;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    background: #F8FAFC;
+}
+
+/* 訊息樣式 */
+.chat-message {
+    max-width: 85%;
+    padding: 0.75rem 1rem;
+    border-radius: 1rem;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    position: relative;
+}
+
+.message-user {
+    align-self: flex-end;
+    background: linear-gradient(135deg, var(--cip-blue), var(--cip-blue-light));
+    color: white;
+    border-bottom-right-radius: 0.25rem;
+}
+
+.message-ai {
+    align-self: flex-start;
+    background: white;
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    border-bottom-left-radius: 0.25rem;
+}
+
+/* 快速問題 */
+.quick-questions {
+    padding: 0.75rem 1.25rem;
+    background: white;
+    border-top: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    gap: 0.5rem;
+    overflow-x: auto;
+}
+
+.quick-question {
+    background: #EFF6FF;
+    color: var(--cip-blue);
+    border: 1px solid #DBEAFE;
+    padding: 0.5rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.quick-question:hover {
+    background: #DBEAFE;
+    transform: translateY(-1px);
+}
+
+.chat-loading {
+    display: none;
+    padding: 0.75rem 1.25rem;
+    background: white;
+    border-top: 1px solid var(--border-color);
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.chat-loading.show {
+    display: flex;
+}
+
+.loading-text {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+
+.chat-input-area {
+    padding: 1rem 1.25rem;
+    background: white;
+}
+
+.chat-form {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.chat-input {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 0.75rem;
+    font-size: 0.875rem;
+    background: #F8FAFC;
+    transition: border-color 0.2s ease;
+}
+
+.chat-input:focus {
+    outline: none;
+    border-color: var(--cip-blue);
+}
+
+.chat-send {
+    width: 2.5rem;
+    height: 2.5rem;
+    background: var(--cip-blue);
+    color: white;
+    border: none;
+    border-radius: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.chat-send:hover {
+    background: var(--cip-blue-light);
+    transform: translateY(-1px);
+}
+
+.ai-toggle-button {
+    width: 3.5rem;
+    height: 3.5rem;
+    background: var(--cip-blue);
+    color: white;
+    border-radius: 50%;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 10px 25px rgba(30, 58, 138, 0.3);
+    transition: all 0.3s ease;
+    font-size: 1.25rem;
+}
+
+.ai-toggle-button:hover {
+    transform: scale(1.1);
+    background: var(--cip-blue-light);
+}
+
+.ai-toggle-button.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none !important;
+}

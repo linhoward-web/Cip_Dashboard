@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>原民會數據儀表板 - 專業數據管理系統</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- 外部CSS檔案 -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/utilities.css">
+</head>
+<body>
+
+    <!-- 登入頁面 -->
+    <div id="authLayer" class="auth-overlay">
+        <div class="w-full max-w-5xl px-12 flex flex-col items-center">
+            <div class="text-center mb-16">
+                <div class="w-16 h-16 bg-blue-900 rounded-2xl flex items-center justify-center text-white text-3xl shadow-xl mx-auto mb-6">
+                    <i class="fas fa-shield-halved"></i>
+                </div>
+                <h2 class="text-4xl font-black text-blue-900 tracking-tight mb-2">系統訪問權限確認</h2>
+                <p class="text-gray-500 font-medium">請選擇您的訪問身分以進入專業儀表板系統</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-10 w-full">
+                <div class="glass-card p-12 rounded-[3.5rem] flex flex-col items-center text-center group">
+                    <div class="w-24 h-24 bg-blue-50 text-blue-800 rounded-full flex items-center justify-center text-5xl mb-6 group-hover:bg-blue-900 group-hover:text-white transition-all duration-300">
+                        <i class="fas fa-user-circle"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-3">一般業務專員</h3>
+                    <p class="text-gray-500 text-sm mb-10 leading-relaxed">適合日常公務查詢、基本人口數據閱覽與標準報表操作</p>
+                    <button onclick="handleLogin('陳專員', 'C', 'staff')" class="w-full py-5 bg-blue-900 text-white rounded-2xl font-black shadow-lg hover:shadow-blue-900/40 transition-all active:scale-95">
+                        進入系統
+                    </button>
+                </div>
+
+                <div class="glass-card p-12 rounded-[3.5rem] flex flex-col items-center text-center group border-blue-200/50">
+                    <div class="w-24 h-24 bg-blue-100 text-blue-900 rounded-full flex items-center justify-center text-5xl mb-6 group-hover:bg-blue-900 group-hover:text-white transition-all duration-300">
+                        <i class="fas fa-user-tie"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-3">決策管理層</h3>
+                    <p class="text-gray-500 text-sm mb-10 leading-relaxed">具備高階預算執行率追蹤、戰略數據分析與跨部門報表權限</p>
+                    <button onclick="handleLogin('王處長', '王', 'officer')" class="w-full py-5 bg-blue-900 text-white rounded-2xl font-black shadow-lg hover:shadow-blue-900/40 transition-all active:scale-95">
+                        授權登入
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 側邊導覽 -->
+    <div id="navOverlay" onclick="toggleNav()"></div>
+    <nav id="sideNav" class="side-nav">
+        <!-- 關閉按鈕移到頂部 -->
+        <div class="side-nav-header">
+            <button onclick="toggleNav()" class="nav-close">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <!-- 導航項目 -->
+        <div class="nav-content">
+            <a href="#" class="nav-item active" onclick="switchDashboard('household')">
+                <i class="fas fa-id-card"></i>
+                <span>戶役政儀表板</span>
+            </a>
+            <a href="#" class="nav-item" onclick="switchDashboard('budget')">
+                <i class="fas fa-chart-line"></i>
+                <span>預算執行儀表板</span>
+            </a>
+            <a href="#" class="nav-item" onclick="switchDashboard('subsidy')">
+                <i class="fas fa-hand-holding-heart"></i>
+                <span>獎補助儀表板</span>
+            </a>
+            <!-- 新增設定選項 -->
+            <a href="#" class="nav-item" onclick="openSettings()">
+                <i class="fas fa-cog"></i>
+                <span>系統設定</span>
+            </a>
+        </div>
+        
+        <!-- 側邊欄底部使用者資訊 -->
+        <div class="nav-footer">
+            <div class="sidebar-user">
+                <div class="sidebar-avatar" id="sidebarAvatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="sidebar-user-info">
+                    <div class="sidebar-user-name" id="sidebarUserName">尚未登入</div>
+                    <div class="sidebar-user-role" id="sidebarUserRole">請先登入系統</div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 設定彈窗 -->
+    <div id="settingsModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title"><i class="fas fa-cog mr-2"></i>系統設定</h3>
+                <button onclick="closeSettings()" class="modal-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="setting-section">
+                    <h4 class="setting-title">個人化設定</h4>
+                    <div class="setting-item">
+                        <label class="setting-label">佈景主題</label>
+                        <select class="setting-input">
+                            <option value="light">淺色模式</option>
+                            <option value="dark">深色模式</option>
+                            <option value="auto">自動</option>
+                        </select>
+                    </div>
+                    <div class="setting-item">
+                        <label class="setting-label">語言設定</label>
+                        <select class="setting-input">
+                            <option value="zh-TW">繁體中文</option>
+                            <option value="en">English</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="setting-section">
+                    <h4 class="setting-title">通知設定</h4>
+                    <div class="setting-item">
+                        <label class="setting-label inline-flex items-center">
+                            <input type="checkbox" class="mr-2">
+                            <span>啟用推播通知</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button onclick="saveSettings()" class="btn-primary">儲存設定</button>
+                    <button onclick="closeSettings()" class="btn-secondary">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 儀表板主體 -->
+    <div id="mainDashboard" class="dashboard-container blurred">
+        <header class="dashboard-header">
+            <div class="flex items-center space-x-6">
+                <button onclick="toggleNav()" class="w-11 h-11 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-center text-blue-900 hover:bg-slate-100 transition-colors">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h1 class="dashboard-title font-black text-blue-900 text-xl tracking-tight">原住民族委員會數據儀表板</h1>
+            </div>
+            
+            <!-- 使用者區域 - 修正排版 -->
+            <div class="user-profile-container">
+                <div class="user-info">
+                    <p id="displayUserName" class="user-name">尚未登入</p>
+                    <p class="user-status">系統穩定運行中</p>
+                </div>
+                <div class="user-avatar-wrapper">
+                    <div id="avatarCircle" class="user-avatar" onclick="toggleUserDropdown()">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <!-- 使用者下拉選單 -->
+                    <div id="userDropdown" class="user-dropdown">
+                        <div class="user-dropdown-header">
+                            <p class="user-dropdown-name" id="dropdownUserName">尚未登入</p>
+                            <p class="user-dropdown-role" id="dropdownUserRole">請先登入系統</p>
+                        </div>
+                        <div class="user-dropdown-actions">
+                            <button onclick="switchUser()" class="dropdown-action-item">
+                                <i class="fas fa-sign-out-alt"></i>
+                                <span>切換使用者</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="dashboard-main">
+            <!-- 關鍵指標卡片區域 (佔畫面20%) -->
+            <div class="metrics-container">
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <i class="fas fa-users metric-icon"></i>
+                        <span class="metric-label">總人口數</span>
+                    </div>
+                    <div class="metric-value">581,204</div>
+                    <!-- 移除增長百分比 -->
+                </div>
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <i class="fas fa-chart-line metric-icon"></i>
+                        <span class="metric-label">預算執行率</span>
+                    </div>
+                    <div class="metric-value">74.2%</div>
+                    <!-- 移除增長百分比 -->
+                </div>
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <i class="fas fa-home metric-icon"></i>
+                        <span class="metric-label">戶數</span>
+                    </div>
+                    <div class="metric-value">182,455</div>
+                    <!-- 移除增長百分比 -->
+                </div>
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <i class="fas fa-hand-holding-heart metric-icon"></i>
+                        <span class="metric-label">補助案件</span>
+                    </div>
+                    <div class="metric-value">12,847</div>
+                    <!-- 移除增長百分比 -->
+                </div>
+            </div>
+
+            <!-- Power BI 儀表板區域 (佔畫面80%) -->
+            <div class="pbi-container">
+                <iframe 
+                    id="powerbiFrame"
+                    title="原民會戶役政儀表板"
+                    src="https://app.powerbi.com/reportEmbed?reportId=c222d432-58aa-4ef4-a26f-58a84217e49f&autoAuth=true&ctid=6c78969f-f5ca-41be-8f60-1d61760a8bb7&navContentPaneEnabled=false&filterPaneEnabled=false"
+                    frameborder="0" 
+                    allowFullScreen="true">
+                </iframe>
+                
+                <!-- 預算執行儀表板 (預留位置) -->
+                <div id="budgetDashboard" class="dashboard-placeholder" style="display: none;">
+                    <div class="placeholder-content">
+                        <div class="placeholder-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h3 class="placeholder-title">預算執行儀表板</h3>
+                        <p class="placeholder-description">預算執行分析與追蹤功能開發中</p>
+                        <div class="placeholder-status">
+                            敬請期待
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 獎補助儀表板 (預留位置) -->
+                <div id="subsidyDashboard" class="dashboard-placeholder" style="display: none;">
+                    <div class="placeholder-content">
+                        <div class="placeholder-icon">
+                            <i class="fas fa-hand-holding-heart"></i>
+                        </div>
+                        <h3 class="placeholder-title">獎補助儀表板</h3>
+                        <p class="placeholder-description">獎補助申請與管理功能開發中</p>
+                        <div class="placeholder-status">
+                            敬請期待
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- AI 助理組件 -->
+    <div id="aiAssistant" class="ai-assistant">
+        <!-- 聊天窗口 -->
+        <div id="chatBox" class="chat-window">
+            <!-- Header -->
+            <div class="chat-header">
+                <div class="chat-title">
+                    <div class="chat-avatar">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div>
+                        <span class="chat-title-text">CIP 智慧分析助手</span>
+                        <span id="aiStatusLabel" class="chat-subtitle">離線模式</span>
+                    </div>
+                </div>
+                <button onclick="toggleChat()" class="chat-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <!-- 聊天訊息區域 -->
+            <div id="chatMessages" class="chat-messages custom-scrollbar">
+                <!-- 訊息將由JS動態生成 -->
+            </div>
+
+            <!-- 載入指示器 -->
+            <div id="chatLoading" class="chat-loading">
+                <div class="typing-dots">
+                    <span></span><span></span><span></span>
+                </div>
+                <span class="loading-text">AI 助理正在思考中...</span>
+            </div>
+
+            <!-- 推薦問句 - 在輸入框上方 -->
+            <div class="quick-questions">
+                <button onclick="quickAsk('如何查看人口統計資料？')" class="quick-question">
+                    📊 資料查詢
+                </button>
+                <button onclick="quickAsk('請解釋預算執行率的計算方式')" class="quick-question">
+                    💰 預算說明
+                </button>
+                <button onclick="quickAsk('儀表板有哪些功能？')" class="quick-question">
+                    ✨ 系統導覽
+                </button>
+                <button onclick="quickAsk('如何申請獎補助？')" class="quick-question">
+                    🎯 獎補助資訊
+                </button>
+            </div>
+
+            <!-- 輸入區域 -->
+            <div class="chat-input-area">
+                <form onsubmit="sendMessage(); return false;" class="chat-form">
+                    <input 
+                        type="text" 
+                        id="chatInput"
+                        placeholder="請輸入您的問題..." 
+                        class="chat-input"
+                        autocomplete="off"
+                    >
+                    <button type="submit" class="chat-send">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <button id="aiToggleButton" onclick="toggleChat()" class="ai-toggle-button disabled">
+            <i class="fas fa-robot"></i>
+        </button>
+    </div>
+
+    <!-- 外部JS檔案 -->
+    <script src="js/utils.js"></script>
+    <script src="js/components.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
